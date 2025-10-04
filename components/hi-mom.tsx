@@ -35,16 +35,17 @@ export default function HiMomComponent({ momName }: { momName: string }){
 
     const handleAddSibling = () => {
         console.log('Adding sibling...')
-        setDynamicSiblings(prev => [...prev || [], siblings[2]]);
+        setDynamicSiblings(prev => [...prev || [], siblings[3]]);
     }
 
     const removeSibling = (sib: Sibling) => {
         const filteredSiblings = dynamicSiblings?.filter(sibling => sib.name !== sibling.name);
         setDynamicSiblings(filteredSiblings);
+        console.log('Yo')
     }
 
     return (
-        <div className="border border-white flex flex-col gap-y-3">
+        <div className="border border-red-700 flex flex-col gap-y-3">
             {hasMomName ? <p>{"Hi mom! mom name: " + momName}</p> : <p>Hi dad</p>}
             {dynamicSiblings?.map((sibling, index) => {
                 return (
