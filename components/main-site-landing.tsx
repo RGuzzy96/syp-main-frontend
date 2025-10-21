@@ -6,24 +6,31 @@ import { Card, CardContent } from "@/components/ui/card"; // keep if you use lat
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, ShieldCheck, Sparkles, FlaskConical, LineChart } from "lucide-react";
 import FadeInSection from "@/components/motion/FadeInSection";
+import { LoginDialog } from "@/components/auth/LoginDialog";
+import QuantumBitsBackground from "@/components/visual/QuantumBitsBackground";
 
 export default function MainSiteLanding() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-930 to-slate-900 text-slate-100">
+    <div className="relative overflow-hidden min-h-screen bg-gradient-to-b from-slate-950 via-slate-930 to-slate-900 text-slate-100">
+      <QuantumBitsBackground
+        opacity={0.09}
+        fontSize={13}
+        speed={1.1}
+        color="rgba(139,92,246,0.9)"
+        trailFade={0.055}
+      />
+
       <Header />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeInSection>
           <Hero />
         </FadeInSection>
-
         <FadeInSection delay={0.15}>
           <ShowcaseSection />
         </FadeInSection>
-
         <FadeInSection delay={0.3}>
           <SandboxSection />
         </FadeInSection>
-
         <FadeInSection delay={0.45}>
           <ClosingBand />
         </FadeInSection>
@@ -45,17 +52,29 @@ function Header() {
             <Badge className="rounded-full bg-violet-600/20 text-violet-200">Quantum</Badge>
           </div>
         </div>
+
         <nav className="hidden items-center gap-6 md:flex">
           <a href="#showcase" className="text-sm text-slate-300 hover:text-white">Showcase</a>
           <a href="#sandbox" className="text-sm text-slate-300 hover:text-white">Sandbox</a>
           <a href="/docs" className="text-sm text-slate-300 hover:text-white">Docs</a>
         </nav>
-        <Button asChild size="sm" className="shadow-lg shadow-violet-700/30">
-          <a href="/quantum-showcase">
-            Launch Demo
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </a>
-        </Button>
+
+        <div className="flex items-center gap-2">
+          <Button asChild size="sm" className="shadow-lg shadow-violet-700/30">
+            <a href="/quantum-showcase">
+              Launch Demo
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </a>
+          </Button>
+
+          {/* 모달 로그인 트리거 */}
+          <LoginDialog triggerClassName="shadow" />
+
+          {/* 전체 페이지 로그인으로도 이동 가능 */}
+          <Button asChild size="sm" variant="outline" className="border-slate-700 bg-slate-900/40">
+            <a href="/login">Login page</a>
+          </Button>
+        </div>
       </div>
     </header>
   );
