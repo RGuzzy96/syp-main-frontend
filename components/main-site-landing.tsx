@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"; // keep if you use lat
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, ShieldCheck, Sparkles, FlaskConical, LineChart } from "lucide-react";
 import FadeInSection from "@/components/motion/FadeInSection";
+import LogoSection from "./ui/logo-section";
 
 export default function MainSiteLanding() {
   return (
@@ -38,13 +39,7 @@ function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800/70 backdrop-blur supports-[backdrop-filter]:bg-slate-950/60">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-2xl bg-slate-800/70 ring-1 ring-white/10" />
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold tracking-tight">CyberClan</span>
-            <Badge className="rounded-full bg-violet-600/20 text-violet-200">Quantum</Badge>
-          </div>
-        </div>
+        <LogoSection />
         <nav className="hidden items-center gap-6 md:flex">
           <a href="#showcase" className="text-sm text-slate-300 hover:text-white">Showcase</a>
           <a href="#sandbox" className="text-sm text-slate-300 hover:text-white">Sandbox</a>
