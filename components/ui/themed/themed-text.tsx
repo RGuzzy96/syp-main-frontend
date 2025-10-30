@@ -20,7 +20,7 @@ export default function ThemedText({
       style={style}
       className={`${className} ${
         type === 'primary'
-          ? 'text-violet-950 dark:text-violet-200'
+          ? 'text-neutral-950'
           : type === 'secondary'
           ? ''
           : ''}

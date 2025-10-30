@@ -13,33 +13,23 @@ import {
 } from '@headlessui/react'
 import {
   Bars3Icon,
-  BellIcon,
-  CalendarIcon,
-  ChartPieIcon,
   Cog6ToothIcon,
   DocumentDuplicateIcon,
   FolderIcon,
   HomeIcon,
-  UsersIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import LogoSection from '../ui/logo-section'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useAuth } from '@/context/AuthContext'
+import Link from 'next/link'
+import { supabase } from '@/lib/supabase'
 
 const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Datasets', href: '#', icon: DocumentDuplicateIcon, current: false },
-]
-const teams = [
-  { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-  { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-  { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
-const userNavigation = [
-  { name: 'Your profile', href: '#' },
-  { name: 'Sign out', href: '#' },
+  { name: 'Dashboard', href: '/app', icon: HomeIcon },
+  { name: 'Projects', href: '/app/projects', icon: FolderIcon },
+  { name: 'Datasets', href: '/app/datasets', icon: DocumentDuplicateIcon },
 ]
 
 function classNames(...classes: string[]) {
@@ -47,12 +37,29 @@ function classNames(...classes: string[]) {
 }
 
 export default function AppNav({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const { profile } = useAuth();
 
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+      const { error } = await supabase.auth.signOut();
+      
+      if (!error) {
+          router.push("/sign-in");
+      } else {
+          console.error("Sign out error:", error.message);
+      }
+  };
+
+  const userNavigation = [
+    { name: 'Sign out', onClick: () => handleSignOut() },
+  ]
 
   return (
-      <div>
+      <div className=''>
         <Dialog open={sidebarOpen} onClose={setSidebarOpen} className="relative z-50 lg:hidden">
           <DialogBackdrop
             transition
@@ -86,45 +93,26 @@ export default function AppNav({ children }: { children: React.ReactNode }) {
                   <ul role="list" className="flex flex-1 flex-col gap-y-7">
                     <li>
                       <ul role="list" className="-mx-2 space-y-1">
-                        {navigation.map((item) => (
-                          <li key={item.name}>
-                            <a
-                              href={item.href}
-                              className={classNames(
-                                item.current
-                                  ? 'bg-white/5 text-white'
-                                  : 'text-gray-400 hover:bg-white/5 hover:text-white',
-                                'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
-                              )}
-                            >
-                              <item.icon aria-hidden="true" className="size-6 shrink-0" />
-                              {item.name}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </li>
-                    <li>
-                      <div className="text-xs/6 font-semibold text-gray-400">Your teams</div>
-                      <ul role="list" className="-mx-2 mt-2 space-y-1">
-                        {teams.map((team) => (
-                          <li key={team.name}>
-                            <a
-                              href={team.href}
-                              className={classNames(
-                                team.current
-                                  ? 'bg-white/5 text-white'
-                                  : 'text-gray-400 hover:bg-white/5 hover:text-white',
-                                'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
-                              )}
-                            >
-                              <span className="flex size-6 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[0.625rem] font-medium text-gray-400 group-hover:border-white/20 group-hover:text-white">
-                                {team.initial}
-                              </span>
-                              <span className="truncate">{team.name}</span>
-                            </a>
-                          </li>
-                        ))}
+                        {navigation.map((item) => { 
+                          const activeTab = item.href === pathname;
+
+                          return (
+                            <li key={item.name}>
+                              <a
+                                href={item.href}
+                                className={classNames(
+                                  activeTab
+                                    ? 'bg-white/5 text-white'
+                                    : 'text-gray-400 hover:bg-white/5 hover:text-white',
+                                  'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
+                                )}
+                              >
+                                <item.icon aria-hidden="true" className="size-6 shrink-0" />
+                                {item.name}
+                              </a>
+                            </li>
+                          )
+                        })}
                       </ul>
                     </li>
                     <li className="mt-auto">
@@ -154,41 +142,24 @@ export default function AppNav({ children }: { children: React.ReactNode }) {
               <ul role="list" className="flex flex-1 flex-col gap-y-7">
                 <li>
                   <ul role="list" className="-mx-2 space-y-1">
-                    {navigation.map((item) => (
+                    {navigation.map((item) => { 
+                      const activeTab = item.href === pathname;
+
+                      return (
                       <li key={item.name}>
-                        <a
+                        <Link
                           href={item.href}
                           className={classNames(
-                            item.current ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white',
+                            activeTab ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white',
                             'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
                           )}
                         >
                           <item.icon aria-hidden="true" className="size-6 shrink-0" />
                           {item.name}
-                        </a>
+                        </Link>
                       </li>
-                    ))}
-                  </ul>
-                </li>
-                <li>
-                  <div className="text-xs/6 font-semibold text-gray-400">Your teams</div>
-                  <ul role="list" className="-mx-2 mt-2 space-y-1">
-                    {teams.map((team) => (
-                      <li key={team.name}>
-                        <a
-                          href={team.href}
-                          className={classNames(
-                            team.current ? 'bg-white/5 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white',
-                            'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold',
-                          )}
-                        >
-                          <span className="flex size-6 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[0.625rem] font-medium text-gray-400 group-hover:border-white/20 group-hover:text-white">
-                            {team.initial}
-                          </span>
-                          <span className="truncate">{team.name}</span>
-                        </a>
-                      </li>
-                    ))}
+                      )
+                    })}
                   </ul>
                 </li>
                 <li className="mt-auto">
@@ -233,27 +204,13 @@ export default function AppNav({ children }: { children: React.ReactNode }) {
                 />
               </form>
               <div className="flex items-center gap-x-4 lg:gap-x-6">
-                <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon aria-hidden="true" className="size-6" />
-                </button>
-
-                {/* Separator */}
-                <div aria-hidden="true" className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-900/10" />
-
                 {/* Profile dropdown */}
                 <Menu as="div" className="relative">
                   <MenuButton className="relative flex items-center">
                     <span className="absolute -inset-1.5" />
-                    <span className="sr-only">Open user menu</span>
-                    <img
-                      alt=""
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      className="size-8 rounded-full bg-gray-50 outline -outline-offset-1 outline-black/5"
-                    />
                     <span className="hidden lg:flex lg:items-center">
                       <span aria-hidden="true" className="ml-4 text-sm/6 font-semibold text-gray-900">
-                        Tom Cook
+                        {`${profile?.first_name} ${profile?.last_name}`}
                       </span>
                       <ChevronDownIcon aria-hidden="true" className="ml-2 size-5 text-gray-400" />
                     </span>
@@ -264,12 +221,12 @@ export default function AppNav({ children }: { children: React.ReactNode }) {
                   >
                     {userNavigation.map((item) => (
                       <MenuItem key={item.name}>
-                        <a
-                          href={item.href}
-                          className="block px-3 py-1 text-sm/6 text-gray-900 data-focus:bg-gray-50 data-focus:outline-hidden"
+                        <button
+                          onClick={item.onClick}
+                          className="block px-3 py-1 text-sm/6 w-full text-start cursor-pointer text-gray-900 data-focus:bg-gray-50 data-focus:outline-hidden"
                         >
                           {item.name}
-                        </a>
+                        </button>
                       </MenuItem>
                     ))}
                   </MenuItems>
