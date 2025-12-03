@@ -11,18 +11,17 @@ import { ShieldCheck, Sparkles, FlaskConical, LineChart } from "lucide-react";
 import FadeInSection from "@/components/motion/FadeInSection";
 
 export default function MainSiteLanding() {
+  const [isContactOpen, setIsContactOpen] = React.useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-930 to-slate-900 text-slate-100">
-      <Header />
+      <Header onOpenContact={() => setIsContactOpen(true)} />
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeInSection>
           <Hero />
         </FadeInSection>
 
-        {/* NEW: picture tiles to subpages */}
-        <FadeInSection delay={0.1}>
-          <SubpageTiles />
-        </FadeInSection>
+        {/* Picture tiles removed */}
 
         <FadeInSection delay={0.2}>
           <ShowcaseSection />
@@ -37,19 +36,25 @@ export default function MainSiteLanding() {
         </FadeInSection>
       </main>
       <Footer />
+
+      <ContactModal
+        isOpen={isContactOpen}
+        onClose={() => setIsContactOpen(false)}
+      />
     </div>
   );
 }
 
 /* ---------------- Header (tight right cluster) ---------------- */
-function Header() {
+function Header({ onOpenContact }: { onOpenContact: () => void }) {
   const pathname = usePathname();
 
   const NAV = [
     { name: "Home", href: "/" },
-    { name: "Platform", href: "/platform" },
-    { name: "Team", href: "/team" },
-    { name: "Research", href: "/research" },
+    { name: "Showcase", href: "/quantum-showcase" },
+    { name: "Sandbox", href: "/ml-sandbox" },
+    // Research now goes to /docs
+    { name: "Research", href: "/docs" },
   ];
 
   return (
@@ -68,8 +73,12 @@ function Header() {
             />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-lg font-semibold tracking-tight">CyberClan</span>
-            <Badge className="rounded-full bg-violet-600/20 text-violet-200">Quantum</Badge>
+            <span className="text-lg font-semibold tracking-tight">
+              CyberClan
+            </span>
+            <Badge className="rounded-full bg-violet-600/20 text-violet-200">
+              Quantum
+            </Badge>
           </div>
         </Link>
 
@@ -78,7 +87,9 @@ function Header() {
           {/* nav pill (moved closer to actions) */}
           <nav className="hidden md:flex items-center gap-2 rounded-2xl border border-white/5 bg-gradient-to-r from-slate-900/60 via-indigo-900/40 to-slate-900/60 px-1.5 py-1 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)]">
             {NAV.map((item) => {
-              const active = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
+              const active =
+                pathname === item.href ||
+                (item.href !== "/" && pathname?.startsWith(item.href));
               return (
                 <Link
                   key={item.name}
@@ -95,13 +106,19 @@ function Header() {
           </nav>
 
           {/* actions */}
-          <Link
-            href="/contact"
+          <button
+            type="button"
+            onClick={onOpenContact}
             className="hidden sm:inline-flex items-center rounded-full border border-slate-700/70 bg-slate-900/40 px-4 py-1.5 text-sm font-medium text-slate-200 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)] hover:border-slate-600 hover:shadow-[0_0_24px_rgba(56,189,248,0.25)] transition"
           >
             Contact us
-          </Link>
-          <Button asChild size="sm" variant="outline" className="border-slate-700 bg-slate-900/40">
+          </button>
+          <Button
+            asChild
+            size="sm"
+            variant="outline"
+            className="border-slate-700 bg-slate-900/40"
+          >
             <Link href="/login">Log in</Link>
           </Button>
         </div>
@@ -130,7 +147,8 @@ function Hero() {
           </h1>
 
           <p className="mt-4 text-slate-300 max-w-lg">
-            Experience a guided quantum decryption walkthrough and compare classical vs. hybrid training loops.
+            Experience a guided quantum decryption walkthrough and compare
+            classical vs. hybrid training loops.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -141,7 +159,12 @@ function Hero() {
             >
               <a href="/quantum-showcase">Try Decryption Demo</a>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-slate-700 bg-slate-900/40">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="border-slate-700 bg-slate-900/40"
+            >
               <a href="/ml-sandbox">Open ML Sandbox</a>
             </Button>
           </div>
@@ -232,51 +255,14 @@ function RightVisual() {
   );
 }
 
-
-
-/* ---------------- Picture tiles -> subpages ---------------- */
-function SubpageTiles() {
-  const tiles = [
-    { title: "Platform", href: "/platform", img: "/images/nav/platform.jpg", blurb: "Explore our quantum-ready stack." },
-    { title: "Team", href: "/team", img: "/images/nav/team.jpg", blurb: "Meet the people building it." },
-    { title: "Research", href: "/research", img: "/images/nav/research.jpg", blurb: "Read our notes & experiments." },
-    { title: "Contact", href: "/contact", img: "/images/nav/contact.jpg", blurb: "Let’s build your roadmap." },
-  ];
-
-  return (
-    <section className="py-8">
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {tiles.map((t) => (
-          <Link key={t.title} href={t.href} className="group relative overflow-hidden rounded-2xl border border-white/5 bg-slate-900/40">
-            <div className="relative h-44 w-full">
-              <Image
-                src={t.img}
-                alt={t.title}
-                fill
-                sizes="(min-width:1024px) 25vw, 50vw"
-                className="object-cover opacity-80 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-            </div>
-            <div className="p-4">
-              <h3 className="text-lg font-semibold">{t.title}</h3>
-              <p className="mt-1 text-sm text-slate-300/80">{t.blurb}</p>
-            </div>
-            <div className="pointer-events-none absolute inset-x-6 bottom-2 h-px bg-gradient-to-r from-transparent via-sky-400/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ---------------- Other sections (unchanged) ---------------- */
+/* ---------------- Other sections ---------------- */
 function ShowcaseSection() {
   return (
     <section id="showcase" className="py-16">
       <h2 className="text-3xl font-semibold">Quantum Decryption Showcase</h2>
       <p className="mt-2 text-slate-300 max-w-2xl">
-        Step through a guided, small-key demonstration inspired by Shor’s algorithm.
+        Step through a guided, small-key demonstration inspired by Shor’s
+        algorithm.
       </p>
       <div className="mt-6 flex gap-4">
         <Button asChild className="shadow-lg shadow-violet-700/30">
@@ -293,12 +279,17 @@ function ShowcaseSection() {
 function SandboxSection() {
   return (
     <section id="sandbox" className="py-16">
-      <h2 className="text-3xl font-semibold">Hybrid Quantum-Classical ML Sandbox</h2>
+      <h2 className="text-3xl font-semibold">
+        Hybrid Quantum-Classical ML Sandbox
+      </h2>
       <p className="mt-2 text-slate-300 max-w-2xl">
         Start/stop experimental runs and visualize accuracy, loss, and latency.
       </p>
       <div className="mt-6 flex gap-4">
-        <Button asChild className="transition-shadow shadow-[0_0_24px_rgba(139,92,246,0.35)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)]">
+        <Button
+          asChild
+          className="transition-shadow shadow-[0_0_24px_rgba(139,92,246,0.35)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)]"
+        >
           <Link href="/ml-sandbox">Open Sandbox</Link>
         </Button>
         <Button asChild variant="ghost">
@@ -315,13 +306,19 @@ function ClosingBand() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h3 className="text-xl font-semibold">Ready to explore?</h3>
-          <p className="mt-1 text-slate-300">Launch the demo or open the sandbox to compare runs.</p>
+          <p className="mt-1 text-slate-300">
+            Launch the demo or open the sandbox to compare runs.
+          </p>
         </div>
         <div className="flex gap-3">
           <Button asChild className="shadow-lg shadow-violet-700/30">
             <Link href="/quantum-showcase">Try the Demo</Link>
           </Button>
-          <Button asChild variant="outline" className="border-slate-700 bg-slate-900/40">
+          <Button
+            asChild
+            variant="outline"
+            className="border-slate-700 bg-slate-900/40"
+          >
             <Link href="/ml-sandbox">Open Sandbox</Link>
           </Button>
         </div>
@@ -334,8 +331,86 @@ function Footer() {
   return (
     <footer className="mt-16 border-t border-slate-800/70">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 text-sm text-slate-400">
-        © {new Date().getFullYear()} Team 7 — Dalhousie University (ECED 4900). Built with Next.js, Tailwind, and shadcn/ui.
+        © {new Date().getFullYear()} Team 7 — Dalhousie University (ECED 4900).
+        Built with Next.js, Tailwind, and shadcn/ui.
       </div>
     </footer>
+  );
+}
+
+/* ---------------- Contact Modal ---------------- */
+
+function ContactModal({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm">
+      <div className="relative w-full max-w-md rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-xl">
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-3 top-3 rounded-full px-2 py-1 text-xs text-slate-400 hover:bg-slate-800"
+        >
+          Esc
+        </button>
+        <h2 className="text-xl font-semibold">Contact us</h2>
+        <p className="mt-1 text-sm text-slate-300">
+          Leave your details and we&apos;ll follow up.
+        </p>
+
+        <form
+          className="mt-4 space-y-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onClose();
+          }}
+        >
+          <div>
+            <label className="block text-xs font-medium text-slate-300">
+              Name
+            </label>
+            <input
+              type="text"
+              className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-slate-300">
+              Email
+            </label>
+            <input
+              type="email"
+              className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-slate-300">
+              Message
+            </label>
+            <textarea
+              rows={4}
+              className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            />
+          </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="border-slate-600 bg-slate-900/60"
+              onClick={onClose}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">Send</Button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }
