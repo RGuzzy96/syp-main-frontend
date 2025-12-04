@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      experiments: {
+        Row: {
+          classical_algorithm: string | null
+          created_at: string
+          dataset: string | null
+          description: string | null
+          id: string
+          name: string | null
+          project_id: string | null
+          quantum_method: string | null
+          task_type: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          classical_algorithm?: string | null
+          created_at?: string
+          dataset?: string | null
+          description?: string | null
+          id?: string
+          name?: string | null
+          project_id?: string | null
+          quantum_method?: string | null
+          task_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          classical_algorithm?: string | null
+          created_at?: string
+          dataset?: string | null
+          description?: string | null
+          id?: string
+          name?: string | null
+          project_id?: string | null
+          quantum_method?: string | null
+          task_type?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "experiments_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
