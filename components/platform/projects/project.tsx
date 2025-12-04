@@ -3,74 +3,90 @@
 import { useEffect, useState } from 'react'
 import ThemedButton from '@/components/ui/themed/themed-button'
 import Table, { TableConfigProps } from '@/components/ui/table'
-import { useAuth } from '@/context/AuthContext'
 import { supabase } from '@/lib/supabase'
 import SidePanel from '@/components/ui/side-panel'
 import DropdownMenu, { DropdownOption } from '@/components/ui/menus/dropdown-menu'
 import { BiDotsVertical } from 'react-icons/bi'
 import { BsTrash } from 'react-icons/bs'
-import { ProjectsRow } from '@/types/rows.types'
 import SectionHeader from '@/components/ui/section-header'
+import { ExperimentsRow, ProjectsRow } from '@/types/rows.types'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/context/AuthContext'
 
-export default function ProjectsMain() {
-  const { session } = useAuth()
-  const [projects, setProjects] = useState<ProjectsRow[]>([])
+export default function ProjectComponent({ id }: { id: string }) {
+  const router = useRouter()
+  const [project, setProject] = useState<ProjectsRow | null>(null)
+  const [experiments, setExperiments] = useState<ExperimentsRow[]>([])
   const [loading, setLoading] = useState(false)
   const [panelOpen, setPanelOpen] = useState(false)
-  const [newProject, setNewProject] = useState({
+  const [newExperiment, setNewExperiment] = useState({
     name: '',
     description: '',
   })
 
-  const loadProjects = async () => {
-    if (!session?.user?.id) return
+  const { session } = useAuth();
+
+  const loadProjectAndExperiments = async () => {
+    if (!id) return
     setLoading(true)
-    const { data, error } = await supabase
+
+    const { data: projectData, error: projectError } = await supabase
       .from('projects')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('id', id)
+      .single()
+
+    if (!projectError && projectData) setProject(projectData)
+
+    const { data: expData, error: expError } = await supabase
+      .from('experiments')
+      .select('*')
+      .eq('project_id', id)
       .order('created_at', { ascending: false })
-    if (!error && data) setProjects(data)
+
+    if (!expError && expData) setExperiments(expData)
+
     setLoading(false)
   }
 
-  const handleDeleteProject = async (item: ProjectsRow) => {
+  const handleDeleteExperiment = async (item: ExperimentsRow) => {
     const confirmDelete = confirm(
-      `Are you sure you want to delete the project "${item.name}"?`
+      `Are you sure you want to delete the experiment "${item.name}"?`
     )
     if (!confirmDelete) return
-    const { error } = await supabase.from('projects').delete().eq('id', item.id)
+    const { error } = await supabase.from('experiments').delete().eq('id', item.id)
     if (!error) {
-      setProjects((prev) => prev.filter((p) => p.id !== item.id))
+      setExperiments((prev) => prev.filter((e) => e.id !== item.id))
     } else {
-      console.error('Error deleting project:', error)
+      console.error('Error deleting experiment:', error)
     }
   }
 
-  const handleCreateProject = async () => {
-    if (!newProject.name.trim()) return
-    const { error } = await supabase.from('projects').insert([
+  const handleCreateExperiment = async () => {
+    if (!newExperiment.name.trim() || !project) return
+    const { error } = await supabase.from('experiments').insert([
       {
-        user_id: session?.user?.id,
-        name: newProject.name.trim(),
-        description: newProject.description.trim(),
+        project_id: project.id,
+        name: newExperiment.name.trim(),
+        description: newExperiment.description.trim(),
+        user_id: session?.user?.id
       },
     ])
     if (!error) {
       setPanelOpen(false)
-      setNewProject({ name: '', description: '' })
-      loadProjects()
+      setNewExperiment({ name: '', description: '' })
+      loadProjectAndExperiments()
     } else console.error(error)
   }
 
-  const getDropdownOptions = (item: ProjectsRow): DropdownOption[] => [
+  const getDropdownOptions = (item: ExperimentsRow): DropdownOption[] => [
     {
       text: 'Delete',
       icon: BsTrash,
       danger: true,
       action: {
         type: 'button',
-        onClick: (i) => handleDeleteProject(i),
+        onClick: (i) => handleDeleteExperiment(i),
       },
     },
   ]
@@ -102,7 +118,7 @@ export default function ProjectsMain() {
         header: { display: '' },
         cell: {
           type: 'element',
-          element: (item: ProjectsRow) => (
+          element: (item: ExperimentsRow) => (
             <div className="w-full flex flex-row justify-center">
               <DropdownMenu
                 buttonDisplay={<BiDotsVertical className="size-4" />}
@@ -117,60 +133,63 @@ export default function ProjectsMain() {
   }
 
   useEffect(() => {
-    loadProjects()
-  }, [session])
+    loadProjectAndExperiments()
+  }, [id])
 
   return (
     <div className="flex flex-col gap-y-3">
       <div className="flex flex-row justify-between items-start">
-        <SectionHeader title='Projects' />
+        <SectionHeader
+          back={() => router.push('/app/projects')}
+          title={project?.name ?? 'Project'}
+        />
         <ThemedButton onClick={() => setPanelOpen(true)}>+ New</ThemedButton>
       </div>
 
       <div className="mt-4">
         <Table
           config={tableConfig}
-          rows={projects}
+          rows={experiments}
           loading={loading}
-          emptyMessage="No projects found"
-          rowLink={(item) => `/app/projects/${item.id}`}
+          emptyMessage="No experiments found"
+          rowLink={(item) => `/app/projects/${id}/${item.id}`}
         />
       </div>
 
-      {/* Create Project Side Panel */}
-      <SidePanel open={panelOpen} onClose={setPanelOpen} title="New Project">
+      {/* Create Experiment Side Panel */}
+      <SidePanel open={panelOpen} onClose={setPanelOpen} title="New Experiment">
         <div>
           <label className="block text-sm font-medium text-neutral-400 mb-2">
             Name
           </label>
           <input
             type="text"
-            value={newProject.name}
+            value={newExperiment.name}
             onChange={(e) =>
-              setNewProject({ ...newProject, name: e.target.value })
+              setNewExperiment({ ...newExperiment, name: e.target.value })
             }
             className="w-full rounded-md bg-neutral-800 border border-neutral-700 p-2 text-white outline-none focus:ring-1 focus:ring-indigo-500"
-            placeholder="Enter project name"
+            placeholder="Enter experiment name"
           />
 
           <label className="block text-sm font-medium text-neutral-400 mt-4 mb-2">
             Description
           </label>
           <textarea
-            value={newProject.description}
+            value={newExperiment.description}
             onChange={(e) =>
-              setNewProject({ ...newProject, description: e.target.value })
+              setNewExperiment({ ...newExperiment, description: e.target.value })
             }
             rows={4}
             className="w-full rounded-md bg-neutral-800 border border-neutral-700 p-2 text-white outline-none focus:ring-1 focus:ring-indigo-500"
-            placeholder="Describe your project (optional)"
+            placeholder="Describe your experiment (optional)"
           />
 
           <div className="mt-6 flex justify-end gap-x-3">
             <ThemedButton type="secondary" onClick={() => setPanelOpen(false)}>
               Cancel
             </ThemedButton>
-            <ThemedButton onClick={handleCreateProject}>Create</ThemedButton>
+            <ThemedButton onClick={handleCreateExperiment}>Create</ThemedButton>
           </div>
         </div>
       </SidePanel>
