@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase"
 import { useAuth } from "@/context/AuthContext"
 import { Card } from "../ui/card"
 import ThemedTextInput from "../ui/themed/themed-text-input"
-import { Button } from "../ui/button"
+import { Button } from "../ui/buttons/button"
 
 export default function AuthComponent({ type }: { type: 'IN' | 'UP' }) {
     const [email, setEmail] = useState('');
@@ -108,6 +108,7 @@ export default function AuthComponent({ type }: { type: 'IN' | 'UP' }) {
                             label="Password"
                             props={{
                                 id: "password",
+                                type: "password",
                                 onChange: (e) => setPassword(e.target.value),
                                 value: password,
                                 placeholder: "************",
@@ -191,7 +192,7 @@ export default function AuthComponent({ type }: { type: 'IN' | 'UP' }) {
 
                 {isSignIn ? 
                 <p className="mt-10 text-center text-sm text-gray-500">
-                    Have a device but don&apos;t have an account yet?{' '}
+                    Don&apos;t have an account yet?{' '}
                     <ThemedA href="/sign-up" className="text-sm">
                         Create Account
                     </ThemedA>

@@ -94,7 +94,7 @@ export default function AppNav({ children }: { children: React.ReactNode }) {
                     <li>
                       <ul role="list" className="-mx-2 space-y-1">
                         {navigation.map((item) => { 
-                          const activeTab = item.href === pathname;
+                          const activeTab = pathname.includes(item.href);
 
                           return (
                             <li key={item.name}>
@@ -143,7 +143,8 @@ export default function AppNav({ children }: { children: React.ReactNode }) {
                 <li>
                   <ul role="list" className="-mx-2 space-y-1">
                     {navigation.map((item) => { 
-                      const activeTab = item.href === pathname;
+                      const activeTab = item.name === 'Dashboard' ? item.href === pathname 
+                        : pathname.includes(item.href);
 
                       return (
                       <li key={item.name}>
@@ -235,7 +236,7 @@ export default function AppNav({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          <main className="py-10">
+          <main className="py-10 bg-neutral-100 min-h-full">
             <div className="px-4 sm:px-6 lg:px-8">{children}</div>
           </main>
         </div>

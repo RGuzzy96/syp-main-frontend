@@ -144,12 +144,12 @@ export default function Table({
   );
 
   return (
-    <div className="rounded-xl border shadow-xs">
+    <div className="rounded-xl border shadow-sm">
       {/* Header */}
       <div
         className={clsx(
           "flex flex-row min-w-5xl rounded-t-xl border-b",
-          "bg-white",
+          "bg-neutral-50",
           headerClassName
         )}
       >
@@ -172,7 +172,7 @@ export default function Table({
 
       {/* Body */}
       {!loading ? (
-        <div className="flex flex-col divide-y divide-neutral-200 w-full min-w-5xl overflow-y-auto bg-neutral-100 rounded-b-xl">
+        <div className="flex flex-col divide-y divide-neutral-200 w-full min-w-5xl overflow-y-auto bg-white rounded-b-xl">
           {rows?.length > 0 ? (
             rows.map((item, index) =>
               rowLink ? (
