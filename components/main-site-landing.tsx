@@ -4,11 +4,11 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/buttons/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Sparkles, FlaskConical, LineChart } from "lucide-react";
 import FadeInSection from "@/components/motion/FadeInSection";
+import { Badge } from "./ui/badge";
 
 export default function MainSiteLanding() {
   const [isContactOpen, setIsContactOpen] = React.useState(false);
