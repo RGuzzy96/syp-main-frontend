@@ -1,9 +1,8 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/buttons/button";
 import { Card, CardContent } from "@/components/ui/card"; // keep if you use later
-import { Badge } from "@/components/ui/badge";
 import { ArrowRight, ShieldCheck, Sparkles, FlaskConical, LineChart } from "lucide-react";
 import FadeInSection from "@/components/motion/FadeInSection";
 import LogoSection from "./ui/logo-section";
