@@ -52,9 +52,7 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
   const NAV = [
     { name: "Home", href: "/" },
     { name: "Showcase", href: "/quantum-showcase" },
-    { name: "Sandbox", href: "/ml-sandbox" },
-    // Research now goes to /docs
-    { name: "Research", href: "/docs" },
+    { name: "Sandbox", href: "/sign-in" },
   ];
 
   return (
@@ -119,7 +117,7 @@ function Header({ onOpenContact }: { onOpenContact: () => void }) {
             variant="outline"
             className="border-slate-700 bg-slate-900/40"
           >
-            <Link href="/login">Log in</Link>
+            <Link href="/sign-in">Log in</Link>
           </Button>
         </div>
       </div>
@@ -165,7 +163,7 @@ function Hero() {
               variant="outline"
               className="border-slate-700 bg-slate-900/40"
             >
-              <a href="/ml-sandbox">Open ML Sandbox</a>
+              <a href="/sign-in">Open ML Sandbox</a>
             </Button>
           </div>
 
@@ -249,7 +247,7 @@ function RightVisual() {
         />
       </div>
 
-      {/* bottom connection glow (the "merge" with background) */}
+      {/* bottom connection glow */}
       <div className="absolute -bottom-8 left-0 right-0 h-24 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent blur-2xl opacity-95" />
     </div>
   );
@@ -267,9 +265,6 @@ function ShowcaseSection() {
       <div className="mt-6 flex gap-4">
         <Button asChild className="shadow-lg shadow-violet-700/30">
           <Link href="/quantum-showcase">Launch Showcase</Link>
-        </Button>
-        <Button asChild variant="ghost">
-          <Link href="/docs">Read how it works</Link>
         </Button>
       </div>
     </section>
@@ -290,10 +285,7 @@ function SandboxSection() {
           asChild
           className="transition-shadow shadow-[0_0_24px_rgba(139,92,246,0.35)] hover:shadow-[0_0_40px_rgba(139,92,246,0.5)]"
         >
-          <Link href="/ml-sandbox">Open Sandbox</Link>
-        </Button>
-        <Button asChild variant="ghost">
-          <Link href="/docs">See API</Link>
+          <Link href="/sign-in">Open Sandbox</Link>
         </Button>
       </div>
     </section>
@@ -319,7 +311,7 @@ function ClosingBand() {
             variant="outline"
             className="border-slate-700 bg-slate-900/40"
           >
-            <Link href="/ml-sandbox">Open Sandbox</Link>
+            <Link href="/sign-in">Open Sandbox</Link>
           </Button>
         </div>
       </div>
@@ -332,7 +324,6 @@ function Footer() {
     <footer className="mt-16 border-t border-slate-800/70">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 text-sm text-slate-400">
         © {new Date().getFullYear()} Team 7 — Dalhousie University (ECED 4900).
-        Built with Next.js, Tailwind, and shadcn/ui.
       </div>
     </footer>
   );
