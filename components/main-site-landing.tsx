@@ -141,7 +141,7 @@ function Hero() {
           </div>
 
           <h1 className="font-bold tracking-tight leading-[1.15] text-[clamp(2rem,6vw,3.5rem)]">
-            Quantum is coming - are you ready?
+            Quantum is coming... are you ready?
           </h1>
 
           <p className="mt-4 text-slate-300 max-w-lg">
