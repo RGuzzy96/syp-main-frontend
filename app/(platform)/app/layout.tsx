@@ -6,7 +6,7 @@ export default function AppRoot({
     children: React.ReactNode 
 }){
     return (
-        <div>
+        <div className="min-h-screen bg-neutral-100">
             <AppNav>{children}</AppNav>
         </div>
     )

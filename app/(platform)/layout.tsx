@@ -1,4 +1,5 @@
 import { AuthProvider } from "@/context/AuthContext";
+import { ToastContainer } from 'react-toastify';
 
 export default function PlatformRootLayout({ 
     children 
@@ -7,6 +8,7 @@ export default function PlatformRootLayout({
 }){
     return (
         <AuthProvider>
+            <ToastContainer />
             {children} 
         </AuthProvider>
     )

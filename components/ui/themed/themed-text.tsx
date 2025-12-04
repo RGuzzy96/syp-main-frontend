@@ -7,20 +7,23 @@ type ThemedTextProps = {
   type?: TextType;
   className?: string;
   style?: any;
+  onClick?: () => void;
 };
 
 export default function ThemedText({
   children,
   type = 'primary',
   className = '',
-  style = {}
+  style = {},
+  onClick = () => {}
 }: ThemedTextProps) {
   return (
     <p
       style={style}
+      onClick={onClick}
       className={`${className} ${
         type === 'primary'
-          ? 'text-violet-950 dark:text-violet-200'
+          ? 'text-neutral-950'
           : type === 'secondary'
           ? ''
           : ''}
