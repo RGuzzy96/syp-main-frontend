@@ -14,7 +14,7 @@ export async function runExperiment(
     
     return execute('experiment', 'run', {
         method: 'POST',
-        body: { userId, experiment },
+        body: { user_id: userId, experiment },
         callback: callback
     });
 }

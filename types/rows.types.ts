@@ -8,3 +8,7 @@ export type ProjectsUpdate = Database['public']['Tables']['projects']['Update'];
 
 export type ExperimentsRow = Database['public']['Tables']['experiments']['Row'];
 export type ExperimentsUpdate = Database['public']['Tables']['experiments']['Update'];
+
+export type ExperimentResultsRow = Database['public']['Tables']['experiment_results']['Row'];
+
+export type RunProcessingTicketsRow = Database['public']['Tables']['run_processing_tickets']['Row'];

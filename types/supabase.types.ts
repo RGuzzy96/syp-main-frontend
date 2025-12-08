@@ -14,6 +14,53 @@ export type Database = {
   }
   public: {
     Tables: {
+      experiment_results: {
+        Row: {
+          accuracy: number | null
+          created_at: string
+          experiment_id: string | null
+          id: string
+          kernel_time: number | null
+          logs: string[] | null
+          total_time: number | null
+          training_time: number | null
+          type: Database["public"]["Enums"]["results_type"] | null
+          user_id: string | null
+        }
+        Insert: {
+          accuracy?: number | null
+          created_at?: string
+          experiment_id?: string | null
+          id?: string
+          kernel_time?: number | null
+          logs?: string[] | null
+          total_time?: number | null
+          training_time?: number | null
+          type?: Database["public"]["Enums"]["results_type"] | null
+          user_id?: string | null
+        }
+        Update: {
+          accuracy?: number | null
+          created_at?: string
+          experiment_id?: string | null
+          id?: string
+          kernel_time?: number | null
+          logs?: string[] | null
+          total_time?: number | null
+          training_time?: number | null
+          type?: Database["public"]["Enums"]["results_type"] | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "experiment_results_experiment_id_fkey"
+            columns: ["experiment_id"]
+            isOneToOne: false
+            referencedRelation: "experiments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       experiments: {
         Row: {
           classical_algorithm: string | null
@@ -118,6 +165,30 @@ export type Database = {
         }
         Relationships: []
       }
+      run_processing_tickets: {
+        Row: {
+          created_at: string
+          id: string
+          last_updated: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_updated?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_updated?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -126,7 +197,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      results_type: "classical" | "quantum"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -253,6 +324,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      results_type: ["classical", "quantum"],
+    },
   },
 } as const

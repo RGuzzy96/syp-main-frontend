@@ -19,7 +19,6 @@ import ExperimentRun from './run/experiment-run'
 const tabOptions: TabOption[] = [
   { displayName: 'Details', value: 'details' },
   { displayName: 'Run', value: 'run' },
-  { displayName: 'Logs', value: 'logs' },
 ]
 
 export default function ExperimentMain({ id }: { id: string }) {
@@ -226,15 +225,8 @@ export default function ExperimentMain({ id }: { id: string }) {
       )}
 
         {selectedTab.value === 'run' && (
-            <ExperimentRun experiment={experiment} experimentConfig={config}  />
+            <ExperimentRun experiment={experiment} />
         )}
-
-      {/* LOGS TAB CONTENT */}
-      {selectedTab.value === 'logs' && (
-        <ThemedCard>
-          <ThemedText className="opacity-70">Logs will appear here...</ThemedText>
-        </ThemedCard>
-      )}
     </div>
   )
 }
